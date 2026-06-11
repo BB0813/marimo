@@ -148,7 +148,15 @@ class LazyLoader(BasePersistenceLoader):
             t.join()
         self._pending.clear()
 
-    def load_cache(self, key: HashKey) -> Cache | None:
+    def load_cache(
+        self,
+        key: HashKey,
+        glbls: dict[str, Any] | None = None,
+    ) -> Cache | None:
+        # glbls (the live cell namespace) is unused here today; the
+        # base Loader.cache_attempt threads it to loaders that resolve
+        # __main__-qualified references against the calling scope.
+        del glbls
         try:
             blob: bytes | None = self.store.get(str(self.build_path(key)))
             if not blob:
