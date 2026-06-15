@@ -180,7 +180,7 @@ def _arrow_load(data: bytes, type_hint: str | None = None) -> Any:
 
 def _pt_load(data: bytes, type_hint: str | None = None) -> Any:
     DependencyManager.torch.require("to load cached torch tensors.")
-    import torch
+    import torch  # type: ignore[import-not-found]
 
     del type_hint
     # weights_only restricts unpickling to tensor payloads; a tensor saved
@@ -241,7 +241,7 @@ def _arrow_dump(obj: Any) -> bytes:
 def _pt_dump(obj: Any) -> bytes:
     # A live tensor in scope implies torch is importable; no fallback
     # needed (unlike _arrow_dump, where pandas can exist without pyarrow).
-    import torch
+    import torch  # type: ignore[import-not-found]
 
     buf = io.BytesIO()
     torch.save(obj, buf)
