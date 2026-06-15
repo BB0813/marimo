@@ -78,9 +78,7 @@ def test_keys_outside_session_not_bundled(tmp_path: Path) -> None:
     cache = _cache_dir(tmp_path)
     (cache / "mine.bin").write_bytes(b"mine")
     (cache / "other.bin").write_bytes(b"other-session")
-    (cache / ".lazy_export_manifest.json").write_text(
-        json.dumps(["mine.bin"])
-    )
+    (cache / ".lazy_export_manifest.json").write_text(json.dumps(["mine.bin"]))
 
     out_dir = tmp_path / "dist"
     out_dir.mkdir()

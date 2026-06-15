@@ -19,7 +19,6 @@ from marimo._cli.parse_args import parse_args
 from marimo._cli.print import (
     echo,
     green,
-    yellow,
 )
 from marimo._cli.sandbox import maybe_prompt_run_in_sandbox, run_in_sandbox
 from marimo._cli.utils import prompt_to_overwrite
