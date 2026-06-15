@@ -4,7 +4,6 @@ from __future__ import annotations
 import pickle
 import queue
 import threading
-from collections.abc import Iterable, Iterator
 from enum import Enum, auto
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Any
@@ -12,7 +11,7 @@ from typing import TYPE_CHECKING, Any
 import msgspec
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterable, Iterator
 
 from marimo import _loggers
 from marimo._save.cache import (

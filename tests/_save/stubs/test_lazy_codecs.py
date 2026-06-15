@@ -5,8 +5,8 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-from marimo._save.loaders.lazy import maybe_update_lazy_stub
-from marimo._save.stubs.lazy_stub import (
+from marimo._save.loaders.lazy import maybe_update_lazy_stub  # noqa: E402
+from marimo._save.stubs.lazy_stub import (  # noqa: E402
     BLOB_DESERIALIZERS,
     BLOB_SERIALIZERS,
 )

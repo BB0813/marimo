@@ -2,13 +2,13 @@
 """End-to-end LazyLoader round-trip for cell-defined classes.
 
 These tests mimic the failing path that surfaces in KANNs.py: a cell
-defines a class (e.g. ``KAN``), another cell creates an instance
-(``model = KAN(...)``), and the cache must restore the instance even
-after ``sys.modules['__main__']`` no longer holds the class. The fix
-is two cooperating pieces: ``ClassStub`` materializes the class source
-into ``glbls`` before pickle blobs deserialize, and
-``CellNamespaceUnpickler`` resolves ``__main__.<name>`` against the
-same ``glbls`` when ``sys.modules`` doesn't have it.
+defines a class (e.g. `KAN`), another cell creates an instance
+(`model = KAN(...)`), and the cache must restore the instance even
+after `sys.modules['__main__']` no longer holds the class. The fix
+is two cooperating pieces: `ClassStub` materializes the class source
+into `glbls` before pickle blobs deserialize, and
+`CellNamespaceUnpickler` resolves `__main__.<name>` against the
+same `glbls` when `sys.modules` doesn't have it.
 """
 
 from __future__ import annotations
@@ -33,9 +33,9 @@ _MISSING = object()
 
 def _make_cell_class(qualname: str = "KAN") -> type:
     """Build a class the same way marimo's kernel does: exec into a
-    glbls with ``__name__='__main__'`` and a synthetic filename whose
-    contents live in ``linecache``. The class then has
-    ``__module__='__main__'`` and ``inspect.getsource`` works via
+    glbls with `__name__='__main__'` and a synthetic filename whose
+    contents live in `linecache`. The class then has
+    `__module__='__main__'` and `inspect.getsource` works via
     linecache — exactly mirroring a cell-defined class."""
     src = (
         f"class {qualname}:\n"
@@ -64,7 +64,7 @@ def _make_cell_class(qualname: str = "KAN") -> type:
 
 
 def _inject_into_main(cls: type) -> object:
-    """Temporarily place *cls* into ``sys.modules['__main__']`` so
+    """Temporarily place *cls* into `sys.modules['__main__']` so
     pickle.dumps' reachability check passes. Returns the prior binding
     (or _MISSING) for restoration."""
     name = cls.__name__
