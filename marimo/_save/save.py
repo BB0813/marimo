@@ -1333,9 +1333,9 @@ def persistent_cache(  # type: ignore[misc]
         from marimo._utils.platform import is_pyodide
 
         if is_pyodide():
-            from marimo._save.loaders.lazy import LazyStore
-
             import warnings
+
+            from marimo._save.loaders.lazy import LazyStore
 
             warnings.warn(
                 "save_path is ignored in WASM — using in-memory store",

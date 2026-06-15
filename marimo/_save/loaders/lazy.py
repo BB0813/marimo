@@ -260,7 +260,7 @@ class LazyStore(WasmExportableStore):
         key = self._sanitize_key(key)
         url = f"{self._base_url()}/{key}"
         try:
-            with urllib.request.urlopen(url) as resp:  # noqa: S310
+            with urllib.request.urlopen(url) as resp:
                 return resp.read() if resp.status == 200 else None
         except Exception:
             return None
@@ -285,9 +285,7 @@ class LazyStore(WasmExportableStore):
             return key, None
 
         async def _fetch_all() -> list[tuple[str, bytes | None]]:
-            return await asyncio.gather(
-                *(_fetch_one(k) for k in keys_list)
-            )
+            return await asyncio.gather(*(_fetch_one(k) for k in keys_list))
 
         try:
             results = loop.run_until_complete(_fetch_all())
@@ -383,9 +381,7 @@ class LazyLoader(BasePersistenceLoader):
                     cache_data.meta.return_value
                     and cache_data.meta.return_value.reference
                 ):
-                    blob_keys.append(
-                        cache_data.meta.return_value.reference
-                    )
+                    blob_keys.append(cache_data.meta.return_value.reference)
             except Exception:
                 pass
 
@@ -448,7 +444,6 @@ class LazyLoader(BasePersistenceLoader):
         if return_ref:
             unique_keys.add(return_ref)
 
-
         # PASS 2: deserialize each .pickle blob through a namespace-aware
         # unpickler when `glbls` is available, so __main__ refs resolve
         # against the cell scope (PASS 1 + cells already run this kernel).
@@ -505,9 +500,7 @@ class LazyLoader(BasePersistenceLoader):
                     else:
                         results.put((key, _BlobStatus.MISSING))
                 except Exception as e:
-                    LOGGER.warning(
-                        "Failed to deserialize blob %s: %s", key, e
-                    )
+                    LOGGER.warning("Failed to deserialize blob %s: %s", key, e)
                     results.put((key, _BlobStatus.MISSING))
 
             threads = [
@@ -730,7 +723,10 @@ class LazyLoader(BasePersistenceLoader):
             elif loader not in ("inline",):
                 format_vars.setdefault(loader, {})[var] = obj
             defs_dict[var] = to_item(
-                path, obj, var_name=var, loader=loader,
+                path,
+                obj,
+                var_name=var,
+                loader=loader,
                 hash=variable_hashes.get(var, ""),
             )
 
