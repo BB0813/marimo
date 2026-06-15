@@ -131,6 +131,11 @@ class FunctionCallResultNotification(Notification, tag="function-call-result"):
         function_call_id: ID matching the original request.
         return_value: Function return value as JSON.
         status: Human-readable success/failure status.
+        found: Whether the requested function was located in the registry.
+            False signals a transient registry desync, so the request is safe
+            to retry. True means no retry will help: a non-ok status then
+            reflects a failure unrelated to lookup, such as the function
+            raising during execution or not being associated with a cell.
     """
 
     name: ClassVar[str] = "function-call-result"
@@ -138,6 +143,7 @@ class FunctionCallResultNotification(Notification, tag="function-call-result"):
     function_call_id: RequestId
     return_value: JSONType
     status: HumanReadableStatus
+    found: bool
 
 
 class RemoveUIElementsNotification(Notification, tag="remove-ui-elements"):
@@ -689,6 +695,7 @@ class StorageEntriesNotification(Notification, tag="storage-entries"):
         namespace: Variable name of the storage backend.
         prefix: The prefix that was listed (set by list_entries).
         query: The search query that was used (set by search).
+        next_page_token: Token for fetching the next page of entries.
         error: Error message if the operation failed.
     """
 
@@ -698,6 +705,7 @@ class StorageEntriesNotification(Notification, tag="storage-entries"):
     namespace: str
     prefix: str | None = None
     query: str | None = None
+    next_page_token: str | None = None
     error: str | None = None
 
 
