@@ -18,7 +18,6 @@ from marimo._runtime.exceptions import (
 from marimo._save.cache import Cache
 from marimo._save.stubs.lazy_stub import UnhashableStub
 
-
 # ---------------------------------------------------------------------------
 # UnhashableStub: data + tripwire semantics
 # ---------------------------------------------------------------------------
