@@ -38,13 +38,13 @@ dependencies = [
     # websockets for use with starlette, and for lsp
     "websockets >= 14.2.0; sys_platform != 'emscripten'",
     # loro for collaborative editing (native extension; server-only)
-    "loro>=1.10.0; sys_platform != 'emscripten'",
+    "loro>=1.10.0; sys_platform != 'emscripten' and sys_platform != 'android'",
     # python <=3.10 compatibility
     "typing_extensions>=4.4.0; python_version < '3.11'",
     # for rst parsing; lowerbound determined by awscli requiring < 0.17,
     "docutils>=0.16.0",
     # to show RAM, CPU usage, other system utilities
-    "psutil>=5.0; sys_platform != 'emscripten'",
+    "psutil>=5.0; sys_platform != 'emscripten' and sys_platform != 'android'",
     # required dependency in Starlette for SessionMiddleware support
     "itsdangerous>=2.0.0",
     # for dataframe support
@@ -140,7 +140,7 @@ dev = [
     # Stubs for optional dataframe backends
     "pyarrow-stubs",
     # For linting
-    "ruff>=0.15.9",
+    "ruff>=0.15.16",
     # For AI
     "pydantic-ai-slim[openai]>=1.84.0",
 ]
@@ -263,7 +263,7 @@ typecheck = [
 
 docs = [
     "marimo_docs",
-    "ruff>=0.15.9",
+    "ruff>=0.15.16",
     "mkdocs>=1.6.1",
     # Live reloading broken in >= 9.6.21: https://github.com/squidfunk/mkdocs-material/issues/8478
     "mkdocs-material==9.6.20",
@@ -343,6 +343,7 @@ ignore = [
     "D415", # First line should end with a period, question mark, or exclamation point
     "FA102", # Use `from __future__ import annotations`
     "PLR1711", # Useless returns. We use this currently to delimit the end of a cell.
+    "ASYNC119", # Yield in context manager in async generator; required for streaming generators (LLM/SSE), no clean refactor
 
     # From new version of Ruff: We should fix these, but it raises too many errors
     "BLE001", # Do not catch blind exception: `Exception`

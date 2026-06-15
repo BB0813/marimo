@@ -4660,8 +4660,14 @@ export interface components {
      *             function_call_id: ID matching the original request.
      *             return_value: Function return value as JSON.
      *             status: Human-readable success/failure status.
+     *             found: Whether the requested function was located in the registry.
+     *                 False signals a transient registry desync, so the request is safe
+     *                 to retry. True means no retry will help: a non-ok status then
+     *                 reflects a failure unrelated to lookup, such as the function
+     *                 raising during execution or not being associated with a cell.
      */
     FunctionCallResultNotification: {
+      found: boolean;
       function_call_id: components["schemas"]["RequestId"];
       /** @enum {unknown} */
       op: "function-call-result";
@@ -6427,6 +6433,7 @@ export interface components {
      *             namespace: Variable name of the storage backend.
      *             prefix: The prefix that was listed (set by list_entries).
      *             query: The search query that was used (set by search).
+     *             next_page_token: Token for fetching the next page of entries.
      *             error: Error message if the operation failed.
      */
     StorageEntriesNotification: {
@@ -6434,6 +6441,8 @@ export interface components {
       /** @default null */
       error?: string | null;
       namespace: string;
+      /** @default null */
+      next_page_token?: string | null;
       /** @enum {unknown} */
       op: "storage-entries";
       /** @default null */
@@ -6477,10 +6486,13 @@ export interface components {
      *             namespace: Variable name identifying the storage backend.
      *             limit: Max entries to return.
      *             prefix: Path prefix to list (None = root).
+     *             page_token: Token for the next page of entries.
      */
     StorageListEntriesCommand: {
       limit: number;
       namespace: string;
+      /** @default null */
+      pageToken?: string | null;
       /** @default null */
       prefix?: string | null;
       requestId: string;
@@ -6491,6 +6503,8 @@ export interface components {
     StorageListEntriesRequest: {
       limit: number;
       namespace: string;
+      /** @default null */
+      pageToken?: string | null;
       /** @default null */
       prefix?: string | null;
       requestId: components["schemas"]["RequestId"];
