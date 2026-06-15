@@ -1,19 +1,19 @@
 # Copyright 2026 Marimo. All rights reserved.
 """ClassStub — source-based serialization for cell-defined classes.
 
-Pickle stores a class reference as ``(__module__, __qualname__)``. For
-classes defined inside marimo cells the module is ``"__main__"``, but the
-interpreter's ``sys.modules["__main__"]`` does not actually hold the cell
-namespace — so ``pickle.loads`` of a cell-defined class (or an instance of
-one) fails with ``AttributeError: Can't get attribute 'KAN' on <module
-'__main__' ...>``.
+Pickle stores a class reference as `(__module__, __qualname__)`. For
+classes defined inside marimo cells the module is `"__main__"`, but the
+interpreter's `sys.modules["__main__"]` does not actually hold the cell
+namespace — so `pickle.loads` of a cell-defined class (or an instance of
+one) fails with `AttributeError: Can't get attribute 'KAN' on <module
+'__main__' ...>`.
 
-``ClassStub`` mirrors the role of :class:`FunctionStub` for classes:
+`ClassStub` mirrors the role of :class:`FunctionStub` for classes:
 capture the class source at save time, re-exec the source into the cell
 namespace at load time. Once the class is alive in the namespace,
 :class:`~marimo._save.loaders.unpickler.CellNamespaceUnpickler` can
-resolve ``__main__.KAN`` against that namespace instead of
-``sys.modules["__main__"]``.
+resolve `__main__.KAN` against that namespace instead of
+`sys.modules["__main__"]`.
 """
 
 from __future__ import annotations
@@ -31,16 +31,16 @@ class ClassStub:
 
     def __init__(self, cls: Any) -> None:
         self.qualname = cls.__qualname__
-        # Classes don't have their own ``__code__``/``co_filename`` like
-        # functions do — they rely on ``__module__`` to find the source
-        # file. For cell-defined classes ``__module__`` is ``'__main__'``
+        # Classes don't have their own `__code__`/`co_filename` like
+        # functions do — they rely on `__module__` to find the source
+        # file. For cell-defined classes `__module__` is `'__main__'`
         # which (in marimo's cell glbls) points at the kernel process
-        # binary, not the cell. Bypass ``inspect.getfile`` by reading the
-        # filename off any defined method's ``__code__.co_filename`` —
+        # binary, not the cell. Bypass `inspect.getfile` by reading the
+        # filename off any defined method's `__code__.co_filename` —
         # that's the file (or marimo cell ID) the class was compiled in.
         filename = self._find_filename(target=cls)
         if filename is None:
-            # Fallback: trust inspect.getsource and hope ``__module__``
+            # Fallback: trust inspect.getsource and hope `__module__`
             # resolves. Raises if the class is unsourcable.
             self.code = textwrap.dedent(inspect.getsource(cls))
             self.filename = f"<{cls.__name__}>"
@@ -76,8 +76,8 @@ class ClassStub:
     @staticmethod
     def _find_filename(target: Any) -> str | None:
         """Return the source filename for *target* by inspecting a
-        defined method's ``__code__.co_filename``, or ``None`` if no
-        method has a code object (e.g. ``type(...)``-built classes)."""
+        defined method's `__code__.co_filename`, or `None` if no
+        method has a code object (e.g. `type(...)`-built classes)."""
         for attr in vars(target).values():
             code = getattr(attr, "__code__", None)
             if code is not None:
@@ -88,9 +88,9 @@ class ClassStub:
     def load(self, glbls: dict[str, Any]) -> Any:
         """Reconstruct the class by executing its source in *glbls*.
 
-        For synthetic filenames (``"<ClassName>"``), seed ``linecache``
+        For synthetic filenames (`"<ClassName>"`), seed `linecache`
         so tracebacks render the source. For real filenames, leave
-        ``linecache`` alone and trust Python's normal lookup.
+        `linecache` alone and trust Python's normal lookup.
         """
         if self.filename.startswith("<"):
             linecache.cache[self.filename] = (
@@ -117,9 +117,9 @@ class ClassStub:
 
     @classmethod
     def from_dump(cls, dump: tuple[str, str, int, str]) -> ClassStub:
-        """Reconstruct a ``ClassStub`` from a ``dump()`` tuple.
+        """Reconstruct a `ClassStub` from a `dump()` tuple.
 
-        Skips ``__init__`` (which requires a live class to introspect).
+        Skips `__init__` (which requires a live class to introspect).
         """
         stub = cls.__new__(cls)
         stub.code, stub.filename, stub.lineno, stub.qualname = dump
